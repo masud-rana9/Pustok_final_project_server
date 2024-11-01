@@ -136,14 +136,27 @@ async function run() {
 
     //book related api
 
+    app.post("/books", VerifyToken, async (req, res) => {
+      const book = req.body;
+      const result = await booksCollection.insertOne(book);
+      res.send(result);
+    });
+
     app.get("/books", async (req, res) => {
       const books = await booksCollection.find().toArray();
       res.send(books);
     });
     app.get("/books/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: id };
+      const query = { _id: new ObjectId(id) };
       const book = await booksCollection.findOne(query);
+      res.send(book);
+    });
+
+    app.delete("/books/:id", VerifyToken, VerifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const book = await booksCollection.deleteOne(query);
       res.send(book);
     });
 
