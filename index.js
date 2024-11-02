@@ -153,6 +153,15 @@ async function run() {
       res.send(book);
     });
 
+    app.put("/books/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedBook = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = { $set: updatedBook };
+      const result = await booksCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+
     app.delete("/books/:id", VerifyToken, VerifyAdmin, async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
