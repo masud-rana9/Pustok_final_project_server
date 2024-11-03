@@ -162,7 +162,7 @@ async function run() {
       res.send(result);
     });
 
-    app.delete("/books/:id", VerifyToken, VerifyAdmin, async (req, res) => {
+    app.delete("/books/:id", VerifyToken, async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const book = await booksCollection.deleteOne(query);
@@ -190,6 +190,13 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await cartCollection.deleteOne(query);
       res.send(result);
+    });
+
+    // Get books for own user by email
+    app.get("/user-books", async (req, res) => {
+      const userEmail = req.query.email; // The email is sent as a query parameter
+      const books = await booksCollection.find({ userEmail }).toArray(); // Filters books by user email
+      res.send(books);
     });
 
     // Send a ping to confirm a successful connection
