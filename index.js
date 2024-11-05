@@ -28,6 +28,9 @@ async function run() {
     const booksCollection = client.db("pustokWithReact").collection("books");
     const cartCollection = client.db("pustokWithReact").collection("carts");
     const userCollection = client.db("pustokWithReact").collection("users");
+    const reviewsCollection = client
+      .db("pustokWithReact")
+      .collection("reviews");
 
     //JWT related Api
     // for ganerate token
@@ -74,6 +77,12 @@ async function run() {
         res.status(500).send({ message: "Internal server error" });
       }
     };
+
+    //Review related api
+    app.get("/reviews", async (req, res) => {
+      const result = await reviewsCollection.find().toArray();
+      res.send(result);
+    });
 
     //user related api
 
