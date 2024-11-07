@@ -28,6 +28,9 @@ async function run() {
     const booksCollection = client.db("pustokWithReact").collection("books");
     const cartCollection = client.db("pustokWithReact").collection("carts");
     const userCollection = client.db("pustokWithReact").collection("users");
+    const contactCollection = client
+      .db("pustokWithReact")
+      .collection("contact");
     const reviewsCollection = client
       .db("pustokWithReact")
       .collection("reviews");
@@ -78,9 +81,35 @@ async function run() {
       }
     };
 
+    //contact realated api
+
+    app.post("/contact", async (req, res) => {
+      const contact = req.body;
+      const result = await contactCollection.insertOne(contact);
+      res.send(result);
+    });
+
+    app.get("/contact", async (req, res) => {
+      const result = await contactCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.delete("/contact/:id", async (req, res) => {
+      const { id } = req.params;
+      const result = await contactCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
+      res.send(result);
+    });
+
     //Review related api
     app.get("/reviews", async (req, res) => {
       const result = await reviewsCollection.find().toArray();
+      res.send(result);
+    });
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewsCollection.insertOne(review);
       res.send(result);
     });
 
